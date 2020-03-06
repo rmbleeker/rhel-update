@@ -1,0 +1,48 @@
+---
+
+- name: Some packages are excluded from updates
+  lineinfile:
+    path: /etc/yum.conf
+    line: 'exclude={{ yum_exclude_packages }}'
+    state: present
+    regexp: '^exclude='
+    insertafter: '[main]'
+  when:
+    - yum_exclude_packages is defined
+
+- name: Include all packages
+  lineinfile:
+    path: /etc/yum.conf
+    state: absent
+    regexp: 'exclude='
+  when:
+    - yum_exclude_packages is not defined
+
+- name: Execute yum update
+  yum:
+    name: '*'
+    state: latest
+    exclude: "{{ yum_exclude_packages | default(omit) }}"
+
+- name: Check if Gnome initial first login exist
+  stat:
+    path: /etc/xdg/autostart/gnome-initial-setup-first-login.desktop
+  register: gnome_init
+
+- name: Do not enable initial setup Gnome
+  lineinfile:
+    name: /etc/xdg/autostart/gnome-initial-setup-first-login.desktop
+    line: 'X-GNOME-Autostart-enabled=false'
+  when: gnome_init.stat.exists
+
+- name: Check if reboot is required
+  shell: "/usr/bin/needs-restarting -r"
+  register: reboot_needed
+  ignore_errors: true
+  failed_when: reboot_needed.rc >= 2
+  changed_when: reboot_needed.rc == 1
+
+- name: Restart server and wait for becoming online
+  reboot:
+  when:
+    - reboot_needed is changed
