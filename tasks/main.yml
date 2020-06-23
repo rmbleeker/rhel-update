@@ -3,7 +3,7 @@
 - name: Some packages are excluded from updates
   lineinfile:
     path: /etc/yum.conf
-    line: 'exclude={{ yum_exclude_packages }}'
+    line: 'exclude={{ yum_exclude_packages | join(" ") }}'
     state: present
     regexp: '^exclude='
     insertafter: '[main]'
@@ -22,7 +22,7 @@
   yum:
     name: '*'
     state: latest
-    exclude: "{{ yum_exclude_packages | default(omit) }}"
+    exclude: '{{ yum_exclude_packages | join(",") or omit }}'
 
 - name: Check if Gnome initial first login exist
   stat:
