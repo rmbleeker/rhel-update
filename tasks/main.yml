@@ -36,3 +36,15 @@
   reboot:
   when:
     - reboot_needed is changed
+    - reboot_when == 'immediately'
+
+- name: Schedule a reboot of the system later
+  at:
+    command: reboot
+    count: "{{ reboot_when }}"
+    units: minutes
+    unique: yes
+  when:
+    - reboot_needed is changed
+    - reboot_when is defined
+
