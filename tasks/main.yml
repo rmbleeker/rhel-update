@@ -23,7 +23,7 @@
     name: '*'
     state: latest
     security: '{{ security_updates_only | default(omit) }}'
-    exclude: '{{ yum_exclude_packages | default(None) | join(",") or omit }}'
+    exclude: '{{ yum_exclude_packages | default("") | join(",") or omit }}'
 
 - name: Check if reboot is required
   shell: "/usr/bin/needs-restarting -r"
