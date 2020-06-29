@@ -11,7 +11,10 @@ None
 Role Variables
 --------------
 
-`yum_exclude_packages: list of packages that should not be updated`
+```
+yum_exclude_packages: list of packages that should not be updated
+security_updates_only: only apply security updates, no system updates
+```
 
 Example:
 ```
