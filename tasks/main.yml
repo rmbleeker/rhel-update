@@ -26,7 +26,7 @@
     exclude: '{{ yum_exclude_packages | default("") | join(",") or omit }}'
 
 - name: Check if reboot is required
-  shell: "/usr/bin/needs-restarting -r"
+  command: "/usr/bin/needs-restarting -r"
   register: reboot_needed
   ignore_errors: true
   failed_when: reboot_needed.rc >= 2
