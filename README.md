@@ -13,15 +13,16 @@ Role Variables
 
 ```yaml
 yum_exclude_packages:   # list of packages that should not be updated
-reboot_when:            # the number of **minutes** to wait for a system restart
+reboot_when:            # the number of minutes to wait for a system restart
 security_updates_only:  # only apply security updates, no system updates
 ```
 
 Example:
 ```yaml
-    yum_exclude_packages:
-      - kernel*
-      - foo*
+yum_exclude_packages:
+  - kernel*
+  - foo*
+reboot_when: 60 # one hour
 ```
 
 Dependencies
