@@ -36,8 +36,8 @@
   reboot:
   when:
     - reboot_needed is changed
-    - reboot_when != 'never'
-    - reboot_when not is number
+    - reboot_when is undefined or
+      reboot_when == 'immediately' 
 
 - name: Schedule a reboot of the system later
   at:
